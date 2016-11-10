@@ -25,28 +25,20 @@ import android.support.v4.content.ContextCompat;
 /**
  * Wrapper class for all the static calls to the Android permission system
  */
-class AndroidPermissionService implements PermissionService {
+public interface PermissionService {
 
   /**
    * @see ContextCompat#checkSelfPermission
    */
-  public int checkSelfPermission(@NonNull Context context, @NonNull String permission) {
-    return ContextCompat.checkSelfPermission(context, permission);
-  }
+  int checkSelfPermission(@NonNull Context context, @NonNull String permission);
 
   /**
    * @see ActivityCompat#requestPermissions
    */
-  public void requestPermissions(@NonNull Activity activity, @NonNull String[] permissions,
-      int requestCode) {
-    ActivityCompat.requestPermissions(activity, permissions, requestCode);
-  }
+  void requestPermissions(@NonNull Activity activity, @NonNull String[] permissions, int requestCode);
 
   /**
    * @see ActivityCompat#shouldShowRequestPermissionRationale
    */
-  public boolean shouldShowRequestPermissionRationale(@NonNull Activity activity,
-      @NonNull String permission) {
-    return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission);
-  }
+  boolean shouldShowRequestPermissionRationale(@NonNull Activity activity, @NonNull String permission);
 }

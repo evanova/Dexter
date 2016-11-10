@@ -43,7 +43,7 @@ final class DexterInstance {
       new EmptyMultiplePermissionsListener();
 
   private final Context context;
-  private final AndroidPermissionService androidPermissionService;
+  private final PermissionService permissionService;
   private final IntentProvider intentProvider;
   private final Collection<String> pendingPermissions;
   private final MultiplePermissionsReport multiplePermissionsReport;
@@ -54,10 +54,10 @@ final class DexterInstance {
   private Activity activity;
   private MultiplePermissionsListener listener = EMPTY_LISTENER;
 
-  DexterInstance(Context context, AndroidPermissionService androidPermissionService,
+  DexterInstance(Context context, PermissionService permissionService,
       IntentProvider intentProvider) {
     this.context = context.getApplicationContext();
-    this.androidPermissionService = androidPermissionService;
+    this.permissionService = permissionService;
     this.intentProvider = intentProvider;
     this.pendingPermissions = new TreeSet<>();
     this.multiplePermissionsReport = new MultiplePermissionsReport();
@@ -179,7 +179,7 @@ final class DexterInstance {
    * Starts the native request permissions process
    */
   void requestPermissionsToSystem(Collection<String> permissions) {
-    androidPermissionService.requestPermissions(activity,
+    permissionService.requestPermissions(activity,
         permissions.toArray(new String[permissions.size()]), PERMISSIONS_REQUEST_CODE);
   }
 
@@ -210,7 +210,7 @@ final class DexterInstance {
    */
   private int checkSelfPermission(Activity activity, String permission) {
     try {
-      return androidPermissionService.checkSelfPermission(activity, permission);
+      return permissionService.checkSelfPermission(activity, permission);
     } catch (RuntimeException ignored) {
       return PackageManager.PERMISSION_DENIED;
     }
@@ -230,7 +230,7 @@ final class DexterInstance {
     List<PermissionRequest> shouldShowRequestRationalePermissions = new LinkedList<>();
 
     for (String permission : permissions) {
-      if (androidPermissionService.shouldShowRequestPermissionRationale(activity, permission)) {
+      if (permissionService.shouldShowRequestPermissionRationale(activity, permission)) {
         shouldShowRequestRationalePermissions.add(new PermissionRequest(permission));
       }
     }
@@ -255,7 +255,7 @@ final class DexterInstance {
   private void updatePermissionsAsDenied(Collection<String> permissions) {
     for (String permission : permissions) {
       PermissionDeniedResponse response = PermissionDeniedResponse.from(permission,
-          !androidPermissionService.shouldShowRequestPermissionRationale(activity, permission));
+          !permissionService.shouldShowRequestPermissionRationale(activity, permission));
       multiplePermissionsReport.addDeniedPermissionResponse(response);
     }
     onPermissionsChecked(permissions);

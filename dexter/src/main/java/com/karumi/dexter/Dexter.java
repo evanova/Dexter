@@ -18,8 +18,10 @@ package com.karumi.dexter;
 
 import android.app.Activity;
 import android.content.Context;
+
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -38,12 +40,22 @@ public final class Dexter {
    * @param context Context used by Dexter. Use your {@link android.app.Application} to make sure
    * the instance is not cleaned up during your app lifetime
    */
-  public static void initialize(Context context) {
+  public static void initialize(Context context, final PermissionService service) {
     if (instance == null) {
-      AndroidPermissionService androidPermissionService = new AndroidPermissionService();
+      PermissionService permissionService = service;
       IntentProvider intentProvider = new IntentProvider();
-      instance = new DexterInstance(context, androidPermissionService, intentProvider);
+      instance = new DexterInstance(context, permissionService, intentProvider);
     }
+  }
+
+  /**
+   * Initializes the library
+   *
+   * @param context Context used by Dexter. Use your {@link android.app.Application} to make sure
+   * the instance is not cleaned up during your app lifetime
+   */
+  public static void initialize(Context context) {
+    initialize(context, new AndroidPermissionService());
   }
 
   /**

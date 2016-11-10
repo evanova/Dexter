@@ -46,7 +46,8 @@ import static org.mockito.Mockito.when;
   private static final String ANY_PERMISSION = "noissimrep yna";
   private static final Thread THREAD = new TestThread();
 
-  @Mock AndroidPermissionService androidPermissionService;
+  @Mock
+  PermissionService permissionService;
   @Mock Context context;
   @Mock Intent intent;
   @Mock Activity activity;
@@ -61,7 +62,7 @@ import static org.mockito.Mockito.when;
     Context mockApplicationContext = mock(Context.class);
     when(context.getApplicationContext()).thenReturn(mockApplicationContext);
     asyncExecutor = new AsyncExecutor();
-    dexter = new DexterInstance(context, androidPermissionService, intentProvider);
+    dexter = new DexterInstance(context, permissionService, intentProvider);
   }
 
   @Test(expected = IllegalStateException.class)
@@ -155,17 +156,17 @@ import static org.mockito.Mockito.when;
   }
 
   private void givenPermissionIsChecked(String permission, int permissionState) {
-    when(androidPermissionService.checkSelfPermission(activity, permission)).thenReturn(
+    when(permissionService.checkSelfPermission(activity, permission)).thenReturn(
         permissionState);
   }
 
   private void givenShouldShowRationaleForPermission(String permission) {
-    when(androidPermissionService.shouldShowRequestPermissionRationale(activity,
+    when(permissionService.shouldShowRequestPermissionRationale(activity,
         permission)).thenReturn(true);
   }
 
   private void givenShouldNotShowRationaleForPermission(String permission) {
-    when(androidPermissionService.shouldShowRequestPermissionRationale(activity,
+    when(permissionService.shouldShowRequestPermissionRationale(activity,
         permission)).thenReturn(false);
   }
 
@@ -176,7 +177,7 @@ import static org.mockito.Mockito.when;
   }
 
   private void givenARuntimeExceptionIsThrownWhenPermissionIsChecked(String permission) {
-    when(androidPermissionService.checkSelfPermission(activity, permission)).thenThrow(
+    when(permissionService.checkSelfPermission(activity, permission)).thenThrow(
         new RuntimeException());
   }
 
